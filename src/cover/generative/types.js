@@ -1,0 +1,28 @@
+export const ART_PATTERNS = [
+    { id: 'mesh', name: 'Mesh glow', rotates: false },
+    { id: 'flow', name: 'Flow field', rotates: true },
+    { id: 'contours', name: 'Topography', rotates: true },
+    { id: 'halftone', name: 'Halftone', rotates: true },
+    { id: 'isometric', name: 'Isometric', rotates: false },
+    { id: 'rings', name: 'Orbits', rotates: true },
+    { id: 'ridges', name: 'Ridgelines', rotates: false },
+    { id: 'truchet', name: 'Truchet', rotates: true },
+    { id: 'bauhaus', name: 'Bauhaus', rotates: true },
+    { id: 'constellation', name: 'Constellation', rotates: false },
+    { id: 'blobs', name: 'Glass blobs', rotates: false },
+    { id: 'rays', name: 'Sunburst', rotates: true },
+];
+export const DEFAULT_ART = {
+    pattern: 'flow',
+    seed: 7,
+    density: 0.55,
+    scale: 0.5,
+    rotation: 0,
+    intensity: 0.6,
+    softness: 0,
+    palette: 'brand',
+    tone: 'light',
+    grain: false,
+    fade: true,
+    frame: 'card',
+};

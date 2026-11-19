@@ -1,8 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod'
-import { DESIGN_GUIDE } from './_guide'
-import { AiCoverSchema, type AiRequest } from './_schema'
-import { COVER_STYLES, STYLE_BY_ID } from './_styles'
+import { DESIGN_GUIDE } from './_guide.js'
+import { AiCoverSchema, type AiRequest } from './_schema.js'
+import { COVER_STYLES, STYLE_BY_ID } from './_styles.js'
 
 /**
  * POST /api/suggest — Claude picks a cover composition for a post title.

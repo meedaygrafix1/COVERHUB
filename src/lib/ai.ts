@@ -27,7 +27,12 @@ export async function fetchAiCover(title: string, subtitle: string, s: Suggestio
     throw new Error('Could not reach the AI service')
   }
   const data = (await res.json().catch(() => null)) as (AiCover & { error?: string }) | null
-  if (!res.ok || !data) throw new Error(data?.error ?? `AI request failed (${res.status})`)
+  if (!res.ok || !data) {
+    if (data?.error) throw new Error(data.error)
+    // no readable error: the server function itself failed (or isn't deployed)
+    if (res.status === 404 || res.ok) throw new Error('The AI endpoint isn’t available here (deploy to Vercel or run npm run dev)')
+    throw new Error(`The AI service crashed (${res.status}). Check the function logs on Vercel`)
+  }
   return data
 }
 
