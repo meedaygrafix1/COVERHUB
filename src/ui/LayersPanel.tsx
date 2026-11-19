@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Circle, Eye, EyeOff, RectangleHorizontal, Spline, Sparkle, Square, Trash2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { partName } from '../lib/composition'
 import type { BrandSettings, CompKind, Composition, SceneItem } from '../lib/types'
@@ -23,6 +24,8 @@ interface Props {
   onDeleteLink: (i: number) => void
   /** drag a layer to a new stack position, counted from the back */
   onMoveTo: (id: string, index: number) => void
+  /** turn a preset-layout cover into an editable composition */
+  onMakeEditable: () => void
 }
 
 /**
@@ -35,7 +38,10 @@ export function LayersPanel(p: Props) {
   if (!p.composition) {
     return (
       <div className="p-4">
-        <p className={cn(t.caption, 'text-muted-foreground')}>This cover uses a preset layout, so its parts can't be edited one by one. Click Regenerate for an editable composition.</p>
+        <p className={cn(t.caption, 'text-muted-foreground')}>This cover uses an older preset layout, so its parts can't be edited one by one yet.</p>
+        <Button variant="secondary" size="compact" className="mt-3 w-full" onClick={p.onMakeEditable}>
+          Make editable
+        </Button>
       </div>
     )
   }

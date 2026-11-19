@@ -4,6 +4,7 @@ import type { TextReport } from './cover/templates'
 import { COVER_STYLES, STYLE_BY_ID, type CoverStyle } from '../api/_styles'
 import { applyAiCover, fetchAiCover, quickCover } from './lib/ai'
 import {
+  composeFromItems,
   copyParts,
   deleteLink,
   deleteParts,
@@ -210,6 +211,10 @@ export default function App() {
     editScene(() => r.scene)
     setSelection(r.ids)
     toast(`Pasted ${r.ids.length} part${r.ids.length === 1 ? '' : 's'}`)
+  }
+  const makeEditable = () => {
+    setConfig((c) => ({ ...c, template: 'illustration', illustration: 'scene', scene: composeFromItems(c.scene) }))
+    toast('Now editable: use the toolbar at the bottom of the canvas')
   }
   const zoomBy = (dir: 'in' | 'out' | number | 'fit') => {
     if (dir === 'fit') return setZoom('fit')
@@ -488,6 +493,7 @@ export default function App() {
                 setSelLink(null)
               }}
               onMoveTo={(id, index) => editScene((s) => movePartTo(s, id, index))}
+              onMakeEditable={makeEditable}
             />
           </aside>
           <main className="relative order-first min-h-[320px] min-w-0 flex-1 md:order-none">
@@ -534,6 +540,7 @@ export default function App() {
               titleChanged={titleChanged}
               onRegenerate={regenerate}
               aiBusy={aiBusy}
+              onMakeEditable={makeEditable}
             />
           </aside>
         </div>

@@ -66,6 +66,8 @@ interface Props {
   titleChanged: boolean
   onRegenerate: () => void
   aiBusy: boolean
+  /** turn a preset-layout cover into an editable composition */
+  onMakeEditable: () => void
 }
 
 /** The four accents parts can use, in the order the composition indexes them. */
@@ -162,7 +164,7 @@ export function DesignPanel(p: Props) {
 
 /* ---------- nothing selected: the cover ---------- */
 
-function CoverPanel({ config: c, brand, styleId, setStyle, update, onPreview, title, onTitle, titleChanged, onRegenerate, aiBusy }: Props) {
+function CoverPanel({ config: c, brand, styleId, setStyle, update, onPreview, title, onTitle, titleChanged, onRegenerate, aiBusy, onMakeEditable }: Props) {
   const style = STYLE_BY_ID[styleId]
   const editable = c.scene.style === 'compose' && !!c.scene.composition
   return (
@@ -242,7 +244,12 @@ function CoverPanel({ config: c, brand, styleId, setStyle, update, onPreview, ti
             <li>Insert cards, tiles, pills, sparkles and connections from the toolbar.</li>
           </ul>
         ) : (
-          <p className={cn(t.caption, 'text-muted-foreground')}>This cover uses a preset layout. Click Regenerate for a composition you can edit part by part.</p>
+          <>
+            <p className={cn(t.caption, 'text-muted-foreground')}>This cover uses an older preset layout. Make it editable to move, resize and add parts with the toolbar.</p>
+            <Button variant="primary" size="compact" onClick={onMakeEditable} className="w-full">
+              Make editable
+            </Button>
+          </>
         )}
       </Section>
     </>

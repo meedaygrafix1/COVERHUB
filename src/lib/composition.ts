@@ -522,3 +522,33 @@ export function reorderSceneItems(scene: SceneConfig, order: number[]): SceneCon
   const moved = { ...scene.composition, elements: scene.composition.elements.map((e) => ({ ...e, item: re(e.item), badge: re(e.badge) })) }
   return { ...scene, items, composition: sanitizeComposition(moved, items.length, true) }
 }
+
+/**
+ * Turn any scene (a preset layout, or the keyword match when the AI is
+ * unavailable) into an editable composition: sources as cards on the left
+ * flowing into the last item as the focal card on the right. One item gets a
+ * centred focal card. Writers can then edit it like any AI composition.
+ */
+export function composeFromItems(scene: SceneConfig): SceneConfig {
+  const items = scene.items.filter((it) => it && typeof it.icon === 'string').slice(0, 5)
+  if (!items.length) return scene
+  const els: CompElement[] = []
+  const links: CompLink[] = []
+  const base = { badge: -1, emphasis: false, lines: 2 }
+  if (items.length === 1) {
+    els.push({ ...base, id: 'card1', kind: 'card', item: 0, x: 380, y: 110, w: 360, h: 340, accent: 0, emphasis: true })
+  } else {
+    const sources = items.slice(0, -1)
+    const n = sources.length
+    const h = n >= 3 ? 112 : 128
+    const gap = n >= 3 ? 26 : 48
+    const top = (ART_H - (n * h + (n - 1) * gap)) / 2
+    sources.forEach((_, i) => {
+      els.push({ ...base, id: `card${i + 1}`, kind: 'card', item: i, x: 60, y: Math.round(top + i * (h + gap)), w: 340, h, accent: i % 4 })
+      links.push({ from: `card${i + 1}`, to: 'result', dashed: false, node: i % 2 === 0 })
+    })
+    els.push({ ...base, id: 'result', kind: 'card', item: items.length - 1, x: 700, y: 90, w: 360, h: 380, accent: 0, emphasis: true })
+  }
+  els.unshift({ ...base, id: 'spark1', kind: 'spark', item: -1, lines: 0, x: 600, y: 70, w: 28, h: 28, accent: 2 }, { ...base, id: 'spark2', kind: 'spark', item: -1, lines: 0, x: 560, y: 470, w: 20, h: 20, accent: 1 })
+  return { style: 'compose', items, composition: { elements: els, links } }
+}

@@ -3,7 +3,7 @@ import type { CoverStyle } from '../../api/_styles'
 import { TEMPLATE_BY_ID } from '../cover/templates'
 import { ICON_NAME_SET } from '../library/catalog'
 import { searchIcons } from '../library/match'
-import { MAX_COMPOSE_ITEMS, sanitizeComposition, stackForDisplay } from './composition'
+import { composeFromItems, MAX_COMPOSE_ITEMS, sanitizeComposition, stackForDisplay } from './composition'
 import { hash } from './random'
 import type { Suggestion } from './suggest'
 import type { CoverConfig, SceneConfig, SceneItem } from './types'
@@ -126,5 +126,7 @@ export function fitStyle(cfg: CoverConfig, style: CoverStyle): CoverConfig {
 
 /** Without the AI (offline, no key, an error): the keyword match, kept inside the style. */
 export function quickCover(cfg: CoverConfig, s: Suggestion, style: CoverStyle): CoverConfig {
-  return fitStyle({ ...applySuggestion(cfg, s), showLogo: false }, style)
+  const c = fitStyle({ ...applySuggestion(cfg, s), showLogo: false }, style)
+  // an editable composition, so the tools work even when the AI didn't design it
+  return { ...c, illustration: 'scene', scene: composeFromItems(c.scene) }
 }
