@@ -74,6 +74,10 @@ export default defineConfig(({ mode }) => {
   // expose .env.local secrets (no VITE_ prefix, so never bundled) to the dev API handlers
   const env = loadEnv(mode, process.cwd(), '')
   process.env.ANTHROPIC_API_KEY ??= env.ANTHROPIC_API_KEY
+  // absolute URL for the social preview tags in index.html (crawlers need it): set VITE_SITE_URL,
+  // or on Vercel it comes from the production domain automatically; empty = relative /og.png
+  const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  process.env.VITE_SITE_URL ??= env.VITE_SITE_URL || (vercelUrl ? `https://${vercelUrl}` : '')
   return {
     plugins: [canonicalDriveLetter(), react(), tailwindcss(), devApi()],
     resolve: {
